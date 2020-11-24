@@ -4,3 +4,4 @@ Forex Aggregator made for WU Hackathon 2020
 TODO : 
 
 1. Get API data
+    1.Pranjal Cloned his repo
