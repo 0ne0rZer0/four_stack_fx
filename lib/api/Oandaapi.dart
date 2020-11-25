@@ -5,12 +5,14 @@ import 'package:http/http.dart' as http;
 import 'package:four_stack_fx/model/currency_rate.dart';
 
 class OandaAPI {
+  String _url = "https://www1.oanda.com/rates/api/v2";
+  String _apiKey = " BEnvswX3s5Aiyw40gdp6muYg";
   Future<CurrencyRate> getData(String base, String target) async {
     String convert = base + "_" + target;
-    String _url =
-        "https://www1.oanda.com/rates/api/v2/rates/spot.json?api_key=BEnvswX3s5Aiyw40gdp6muYg&base=$base&quote=$target";
-
-    var responseJSON = await http.get(_url);
+    var responseJSON = await http.get(_url +
+        " /rates/spot.json?api_key=" +
+        _apiKey +
+        "&base=$base&quote=$target");
     var convertedJSON = jsonDecode(responseJSON.body);
     var data = convertedJSON["quotes"][0];
     var buy = data["bid"];
