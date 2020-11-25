@@ -2,6 +2,7 @@ import 'dart:convert';
 import '../main.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:four_stack_fx/model/currency_rate.dart';
 
 class TradersAPI {
   Future<CurrencyRate> getData(String base, String target) async {
