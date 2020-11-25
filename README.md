@@ -1,5 +1,5 @@
 # 4StackFX
 Forex Aggregator made for WU Hackathon 2020
 
-TODO : 
- 1.1.
+TODO :
+API Update
