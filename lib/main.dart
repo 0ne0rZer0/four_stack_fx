@@ -18,11 +18,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // SarrafchiAPI sarrafchiAPI = SarrafchiAPI();
-<<<<<<< HEAD
-    // sarrafchiAPI.getLatest(quote: 'US Dollar', base: 'Indian Rupee');
-=======
     //sarrafchiAPI.getData(quote: 'US Dollar', base: 'Indian Rupee');
->>>>>>> a18beed3a04b0277bae6a4ef08f64c9ac430db1c
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

@@ -116,6 +116,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.0"
+  responsive_context:
+    dependency: transitive
+    description:
+      name: responsive_context
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
+  responsive_table:
+    dependency: "direct main"
+    description:
+      name: responsive_table
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.1+8"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -179,3 +193,4 @@ packages:
     version: "2.1.0-nullsafety.5"
 sdks:
   dart: ">=2.12.0-0.0 <3.0.0"
+  flutter: ">=1.10.0"
