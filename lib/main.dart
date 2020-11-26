@@ -9,8 +9,8 @@ class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SarrafchiAPI sarrafchiAPI = SarrafchiAPI();
-    sarrafchiAPI.getLatest(quote: 'US Dollar', base: 'Indian Rupee');
+    // SarrafchiAPI sarrafchiAPI = SarrafchiAPI();
+    //sarrafchiAPI.getData(quote: 'US Dollar', base: 'Indian Rupee');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
