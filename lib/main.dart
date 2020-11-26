@@ -1,28 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:four_stack_fx/api/sarrafchi.dart';
+import 'package:four_stack_fx/color.dart';
+import 'package:four_stack_fx/screens/aggregator_screen.dart';
+import 'package:four_stack_fx/screens/data_sample.dart';
 
 void main() {
   runApp(App());
 }
 
+String selectedFrom = 'INR';
+String selectedTo = 'USD';
+double amount = 0;
+
 class App extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SarrafchiAPI sarrafchiAPI = SarrafchiAPI();
-    sarrafchiAPI.getLatest(quote: 'US Dollar', base: 'Indian Rupee');
+    // SarrafchiAPI sarrafchiAPI = SarrafchiAPI();
+    // sarrafchiAPI.getLatest(quote: 'US Dollar', base: 'Indian Rupee');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primaryColor: Color(0xFF151E28),
+        primaryColor: kPrimaryDarkColor,
       ),
-      home: HomePage(),
+      home: AggregatorPage(),
     );
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  setFrom(String name) {
+    selectedFrom = name;
+  }
+
+  setTo(String name) {
+    selectedTo = name;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,71 +51,108 @@ class HomePage extends StatelessWidget {
         title: Text('Four Stack FX',
             style: TextStyle(fontWeight: FontWeight.w100)),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 100,
-          ),
-          Text(
-            'Always get the Best Forex Rates',
-            style: TextStyle(fontSize: 70, fontWeight: FontWeight.w100),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            'Find out the best LPs for you in the market',
-            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w100),
-          ),
-          SizedBox(
-            height: 70,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              DropDownMenu(hint: "From"),
-              DropDownMenu(hint: "To"),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: 50,
-                width: 150,
-                decoration: BoxDecoration(),
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Enter Quantity',
-                    border: InputBorder.none,
+      body: SafeArea(
+        child: Column(
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 100,
+            ),
+            Text(
+              'Always get the Best Forex Rates',
+              style: TextStyle(fontSize: 70, fontWeight: FontWeight.w100),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Find out the best Liquidity Providers for you in the market',
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w100),
+            ),
+            SizedBox(
+              height: 70,
+            ),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  DropDownMenu(
+                    hint: "From",
+                    callback: setFrom,
                   ),
+                  DropDownMenu(
+                    hint: "To",
+                    callback: setTo,
+                  ),
+                ],
+              ),
+            ),
+            Center(
+              child: Container(
+                height: 100,
+                width: 200,
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.digitsOnly
+                  ],
+                  textAlign: TextAlign.center,
+                  decoration: InputDecoration(
+                    labelText: 'Enter Amount',
+                    labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  onChanged: (String amountInput) {
+                    setState(() {
+                      amount = double.parse(amountInput);
+                    });
+                  },
                 ),
               ),
-            ],
-          ),
-        ],
+            ),
+            RaisedButton(
+              elevation: 1,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+              child: Text(
+                'Check Rates',
+                style: TextStyle(color: Colors.white),
+              ),
+              color: kPrimaryDarkColor,
+              onPressed: () {
+                debugPrint(selectedFrom);
+                debugPrint(selectedTo);
+                debugPrint(amount.toString());
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AggregatorPage()),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class DropDownMenu extends StatefulWidget {
+  final Function callback;
   final String hint;
-  DropDownMenu({this.hint = ""});
+  DropDownMenu({this.hint = "", this.callback});
   @override
-  _DropDownMenuState createState() => _DropDownMenuState(hint: hint);
+  _DropDownMenuState createState() =>
+      _DropDownMenuState(hint: hint, callback: this.callback);
 }
 
 class _DropDownMenuState extends State<DropDownMenu> {
-  String selectedFrom = 'INR';
-  String selectedTo = 'USD';
   var currencies = [
     "USD",
     "INR",
     "EUR",
   ];
   String hint = "";
-  _DropDownMenuState({this.hint});
+  Function callback;
+  _DropDownMenuState({this.hint, this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +174,7 @@ class _DropDownMenuState extends State<DropDownMenu> {
               .toList(),
           onChanged: (String name) {
             setState(() {
-              selectedTo = name;
+              callback(name);
             });
           },
           value: selectedTo,
