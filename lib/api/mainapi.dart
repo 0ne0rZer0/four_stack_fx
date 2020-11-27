@@ -17,7 +17,7 @@ class APICall {
   LiveratesAPI api3 = new LiveratesAPI();
   OandaAPI api4 = new OandaAPI();
   TradersAPI api5 = new TradersAPI();
-  SarrafchiAPI api6 = new SarrafchiAPI();
+//  SarrafchiAPI api6 = new SarrafchiAPI();
   Future<List<CurrencyRate>> getmaindata(String base, String target) async {
     List<CurrencyRate> result = new List<CurrencyRate>();
     result.add(await api1.getData(base, target));
@@ -25,7 +25,7 @@ class APICall {
     result.add(await api3.getData(base, target));
     result.add(await api4.getData(base, target));
     result.add(await api5.getData(base, target));
-    result.add(await api6.getData(base, target));
+    //  result.add(await api6.getData(base, target));
     return result;
   }
 
@@ -37,7 +37,7 @@ class APICall {
     result.add(await api3.getRangeData(base, target, startDate, endDate));
     result.add(await api4.getRangeData(base, target, startDate, endDate));
     result.add(await api5.getRangeData(base, target, startDate, endDate));
-    result.add(await api6.getRangeData(base, target, startDate, endDate));
+    //result.add(await api6.getRangeData(base, target, startDate, endDate));
     return result;
   }
 }

@@ -7,6 +7,7 @@ import 'package:four_stack_fx/model/currency_rate.dart';
 class TradersAPI {
   String _url = "https://marketdata.tradermade.com/api/v1";
   String _apiKey = "-3F23YQDx2mgHUv6-M-m";
+
   Future<CurrencyRate> getData(String base, String target) async {
     String convert = base + target;
     var responseJSON =
