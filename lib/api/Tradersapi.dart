@@ -12,13 +12,17 @@ class TradersAPI {
     String convert = base + target;
     var responseJSON =
         await http.get(_url + "/live?currency=$convert,&api_key=" + _apiKey);
-    var convertedJSON = jsonDecode(responseJSON.body);
-    var data = convertedJSON["quotes"][0];
-    var buy = data["ask"];
-    var sell = data["bid"];
+    if (responseJSON.statusCode == 200) {
+      var convertedJSON = jsonDecode(responseJSON.body);
+      var data = convertedJSON["quotes"][0];
+      var buy = data["ask"];
+      var sell = data["bid"];
 
-    CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
-    return currencyRate;
+      CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
+      return currencyRate;
+    } else {
+      throw Exception('Failed to load post');
+    }
   }
 
   //Using same API getting range data
@@ -29,14 +33,39 @@ class TradersAPI {
     var responseJSON = await http.get(_url +
         "/timeseries?currency=$convert&start_date=$startDate&end_date=$endDate&api_key=" +
         _apiKey);
-    var convertedJSON = jsonDecode(responseJSON.body.toString());
-    var arrayOfdates = convertedJSON["quotes"];
-    List<CurrencyRate> result = new List<CurrencyRate>();
-    for (int i = 0; i < arrayOfdates.length; i++) {
-      var buy = arrayOfdates[i]["high"];
-      var sell = arrayOfdates[i]["low"];
-      result.add(CurrencyRate(buy.toString(), sell.toString()));
+    if (responseJSON.statusCode == 200) {
+      var convertedJSON = jsonDecode(responseJSON.body.toString());
+      var arrayOfdates = convertedJSON["quotes"];
+      List<CurrencyRate> result = new List<CurrencyRate>();
+      for (int i = 0; i < arrayOfdates.length; i++) {
+        var buy = arrayOfdates[i]["high"];
+        var sell = arrayOfdates[i]["low"];
+        result.add(CurrencyRate(buy.toString(), sell.toString()));
+      }
+      return result;
+    } else {
+      throw Exception('Failed to load post');
     }
-    return result;
+  }
+
+  Future<CurrencyRate> getGivenDate(
+      String base, String target, String date) async {
+    String convert = base + target;
+    var responseJSON = await http.get(_url +
+        "/timeseries?currency=$convert&start_date=$date&end_date=$date&api_key=" +
+        _apiKey);
+    if (responseJSON.statusCode == 200) {
+      var convertedJSON = jsonDecode(responseJSON.body);
+      var data = convertedJSON["quotes"];
+
+      var data2 = convertedJSON["quotes"][0];
+      var buy = data2["high"];
+      var sell = data2["low"];
+
+      CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
+      return currencyRate;
+    } else {
+      throw Exception('Failed to load post');
+    }
   }
 }
