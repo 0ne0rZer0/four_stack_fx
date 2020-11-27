@@ -10,7 +10,8 @@ class AggregatorPage extends StatefulWidget {
   final String toCur;
   AggregatorPage({this.amount, this.fromCur, this.toCur});
   @override
-  _AggregatorPageState createState() => _AggregatorPageState(amount: amount);
+  _AggregatorPageState createState() =>
+      _AggregatorPageState(amount: amount, fromCur: fromCur, toCur: toCur);
 }
 
 class _AggregatorPageState extends State<AggregatorPage> {
