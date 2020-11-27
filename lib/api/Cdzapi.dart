@@ -7,20 +7,23 @@ import 'package:four_stack_fx/model/currency_rate.dart';
 
 class CdzAPI {
   Random random = new Random();
-  String _url = "https://currencydatafeed.com/api";
+  String _url = "https://currencydatafeed.com/api/data.php?token=";
   String _url2 = "https://free.currconv.com/api/v7/convert?apiKey=";
   String _apiKey2 = "0a96c48ff75a25b4f95f";
   String _apiKey = "aqcg8adcz26i2alcpkat"; //Api key
   Future<CurrencyRate> getData(String base, String target) async {
-    String convert = base + target;
-    var responseJSON =
-        await http.get(_url + "/live?currency=$convert,&api_key=" + _apiKey);
+    String convert = base + "/" + target;
+    var responseJSON = await http.get(_url + _apiKey + "&currency=$convert");
     var convertedJSON = jsonDecode(responseJSON.body);
-    var data = convertedJSON["quotes"][0];
-    var buy = data["ask"];
-    buy = buy + random.nextDouble();
-    var sell = data["bid"];
+    //debugPrint(convertedJSON.toString());
+    var data = convertedJSON["currency"][0];
+    debugPrint(data.toString());
+    var buy = data["value"];
+    buy = double.parse(buy);
+    //debugPrint(buy.toString());
+    var sell = buy;
     sell = sell - random.nextDouble();
+    debugPrint(sell.toString());
     CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
     return currencyRate;
   }

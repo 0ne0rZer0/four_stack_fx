@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:four_stack_fx/api/mainapi.dart';
+import 'package:four_stack_fx/model/currency_rate.dart';
 import 'package:responsive_table/DatatableHeader.dart';
 import 'package:responsive_table/ResponsiveDatatable.dart';
 
@@ -12,28 +14,29 @@ class _AggregatorPageState extends State<AggregatorPage> {
     DatatableHeader(
         text: "ID",
         value: "id",
-        show: false,
-        sortable: true,
-        textAlign: TextAlign.right),
-    DatatableHeader(
-        text: "Name",
-        value: "name",
         show: true,
-        flex: 2,
+        flex: 1,
         sortable: true,
         textAlign: TextAlign.left),
+    // DatatableHeader(
+    //     text: "Name",
+    //     value: "name",
+    //     show: true,
+    //     flex: 2,
+    //     sortable: true,
+    //     textAlign: TextAlign.left),
     DatatableHeader(
         text: "Buy Price",
         value: "buyPrice",
         show: true,
-        flex: 2,
+        flex: 3,
         sortable: true,
         textAlign: TextAlign.left),
     DatatableHeader(
         text: "Sell Price",
         value: "sellPrice",
         show: true,
-        flex: 2,
+        flex: 3,
         sortable: true,
         textAlign: TextAlign.left)
   ];
@@ -51,10 +54,25 @@ class _AggregatorPageState extends State<AggregatorPage> {
   bool _isLoading = true;
   bool _showSelect = true;
 
+  initData() async {
+    setState(() => _isLoading = true);
+    APICall apiCall = APICall();
+
+    Future.delayed(Duration(seconds: 3)).then((value) async {
+      List<CurrencyRate> lrc = await apiCall.getmaindata("USD", "EUR");
+      for (int i = 0; i < lrc.length; i++) {
+        _source.add(
+            {"id": i + 1, "buyPrice": lrc[i].buy, "sellPrice": lrc[i].sell});
+      }
+      setState(() => _isLoading = false);
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    initData();
   }
 
   @override
