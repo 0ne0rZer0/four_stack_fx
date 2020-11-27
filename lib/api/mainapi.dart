@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
+
 import '../main.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -38,6 +40,17 @@ class APICall {
     result.add(await api4.getRangeData(base, target, startDate, endDate));
     result.add(await api5.getRangeData(base, target, startDate, endDate));
     //result.add(await api6.getRangeData(base, target, startDate, endDate));
+    return result;
+  }
+
+  Future<List<CurrencyRate>> getGivenDates(
+      String base, String target, String date) async {
+    List<CurrencyRate> result = new List<CurrencyRate>();
+    result.add(await api1.getGivenDate(base, target, date));
+    result.add(await api2.getGivenDate(base, target, date));
+    result.add(await api3.getGivenDate(base, target, date));
+    result.add(await api4.getGivenDate(base, target, date));
+    result.add(await api5.getGivenDate(base, target, date));
     return result;
   }
 }
