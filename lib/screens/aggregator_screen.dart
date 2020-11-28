@@ -109,7 +109,7 @@ class _AggregatorPageState extends State<AggregatorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Four Stack FX',
+        title: Text('Four Stacks FX',
             style: TextStyle(fontWeight: FontWeight.w100)),
       ),
       body: SingleChildScrollView(

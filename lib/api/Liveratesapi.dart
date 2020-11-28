@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:math';
-import '../main.dart';
-import 'package:flutter/material.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:four_stack_fx/model/currency_rate.dart';
 
@@ -30,27 +28,6 @@ class LiveratesAPI {
     }
   }
 
-  // Future<List<CurrencyRate>> getRangeData(
-  //     String base, String target, String startDate, String endDate) async {
-  //   Random random = new Random();
-  //   var responseJSON = await http.get(_url +
-  //       "/historical/series?base=$base&start=$startDate&end=$endDate&symbols=$target&key=" +
-  //       _apiKey);
-  //   if (responseJSON.statusCode == 200) {
-  //     var convertedJSON = jsonDecode(responseJSON.body.toString());
-  //     List<CurrencyRate> result = new List();
-  //     debugPrint(convertedJSON.toString());
-  //     var value;
-  //     for (final dates in convertedJSON.keys) {
-  //       var buy = convertedJSON[dates]["USD"];
-  //       var sell = convertedJSON[dates]["USD"] - random.nextDouble();
-  //       result.add(CurrencyRate(buy.toString(), sell.toString()));
-  //     }
-  //     return result;
-  //   } else {
-  //     throw Exception('Failed to load post');
-  //   }
-  // }
   Future<List<CurrencyRate>> getRangeData(
       String base, String target, String startDate, String endDate) async {
     var responseJSON = await http.get(_url +

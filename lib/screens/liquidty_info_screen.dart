@@ -159,7 +159,7 @@ class _LiquidityPageState extends State<LiquidityPage> {
     bool isScreenWide = MediaQuery.of(context).size.width >= 800;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Four Stack FX',
+        title: Text('Four Stacks FX',
             style: TextStyle(fontWeight: FontWeight.w100)),
       ),
       body: SafeArea(
