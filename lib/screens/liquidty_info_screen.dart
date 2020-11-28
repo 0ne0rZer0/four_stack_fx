@@ -4,14 +4,13 @@ import 'package:four_stack_fx/api/Forexapi.dart';
 import 'package:four_stack_fx/api/Liveratesapi.dart';
 import 'package:four_stack_fx/api/Oandaapi.dart';
 import 'package:four_stack_fx/api/Tradersapi.dart';
-import 'package:four_stack_fx/api/mainapi.dart';
-import 'package:four_stack_fx/color.dart';
+
 import 'package:four_stack_fx/model/currency_rate.dart';
 import 'package:responsive_table/ResponsiveDatatable.dart';
 import 'package:responsive_table/DatatableHeader.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'dart:async';
-import 'dart:math';
+
 import 'package:intl/intl.dart';
 
 class LiquidityPage extends StatefulWidget {
@@ -126,7 +125,7 @@ class _LiquidityPageState extends State<LiquidityPage> {
           result = await forexAPICall.getRangeData(
               fromCur, toCur, startDate, endDate);
           break;
-        case 'LiveRates':
+        case 'LiveRate':
           LiveratesAPI liveAPICall = LiveratesAPI();
           result = await liveAPICall.getRangeData(
               fromCur, toCur, startDate, endDate);
