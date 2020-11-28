@@ -28,20 +28,25 @@ class ForexAPI {
 
   Future<List<CurrencyRate>> getRangeData(
       String base, String target, String startDate, String endDate) async {
-    Random random = new Random();
-    var responseJSON = await http.get(
-        _url2 + "start_at=$startDate&end_at=$endDate&symbols=$base,$target");
+    var responseJSON = await http.get(_url2 +
+        "start_at=$startDate&end_at=$endDate&base=$base&symbols=$target");
+
     var convertedJSON = jsonDecode(responseJSON.body.toString());
     List<CurrencyRate> result = new List<CurrencyRate>();
     var value = new Map();
 
     var date = convertedJSON["rates"];
+    //debugPrint(date.toString());
     for (final name in date.keys) {
       value = date[name];
-      var buy = value["$base"];
-      var sell = buy - random.nextDouble();
-      result.add(CurrencyRate(buy.toString(), sell.toString()));
+
+      for (final name2 in value.keys) {
+        var buy = value[name2];
+        var sell = buy - 0.002;
+        result.add(CurrencyRate(buy.toString(), sell.toString()));
+      }
     }
+    //debugPrint(result[0]._sell.toString());
     return result;
   }
 
@@ -52,8 +57,8 @@ class ForexAPI {
     var convertedJSON = jsonDecode(responseJSON.body);
     var data = convertedJSON["quotes"];
     var data2 = convertedJSON["quotes"][0];
-    var buy = data2["bid"] + 0.0002;
-    var sell = data2["ask"] + 0.0002;
+    double buy = double.parse(data2["bid"]) + 0.002;
+    double sell = double.parse(data2["ask"]) + 0.002;
     CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
     return currencyRate;
   }

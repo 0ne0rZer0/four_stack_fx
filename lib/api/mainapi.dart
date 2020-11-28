@@ -36,9 +36,9 @@ class APICall {
     List<List<CurrencyRate>> result = new List<List<CurrencyRate>>();
     result.add(await api1.getRangeData(base, target, startDate, endDate));
     result.add(await api2.getRangeData(base, target, startDate, endDate));
-    result.add(await api3.getRangeData(base, target, startDate, endDate));
-    result.add(await api4.getRangeData(base, target, startDate, endDate));
-    result.add(await api5.getRangeData(base, target, startDate, endDate));
+    //result.add(await api3.getRangeData(base, target, startDate, endDate));
+    //result.add(await api4.getRangeData(base, target, startDate, endDate));
+    //result.add(await api5.getRangeData(base, target, startDate, endDate));
     //result.add(await api6.getRangeData(base, target, startDate, endDate));
     return result;
   }

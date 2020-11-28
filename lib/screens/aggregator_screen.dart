@@ -1,33 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:four_stack_fx/api/mainapi.dart';
 import 'package:four_stack_fx/model/currency_rate.dart';
+import 'package:four_stack_fx/screens/liquidty_info_screen.dart';
 import 'package:responsive_table/DatatableHeader.dart';
 import 'package:responsive_table/ResponsiveDatatable.dart';
+import 'package:intl/intl.dart';
 
 class AggregatorPage extends StatefulWidget {
   final double amount;
   final String fromCur;
   final String toCur;
-  AggregatorPage({this.amount, this.fromCur, this.toCur});
+  final DateTime dateTime;
+  AggregatorPage({this.amount, this.fromCur, this.toCur, this.dateTime});
   @override
-  _AggregatorPageState createState() =>
-      _AggregatorPageState(amount: amount, fromCur: fromCur, toCur: toCur);
+  _AggregatorPageState createState() => _AggregatorPageState(
+      amount: amount, fromCur: fromCur, toCur: toCur, date: dateTime);
 }
 
 class _AggregatorPageState extends State<AggregatorPage> {
   String fromCur;
   String toCur;
   double amount;
-  _AggregatorPageState({this.amount, this.fromCur, this.toCur});
+  DateTime date = DateTime.now();
+  _AggregatorPageState({this.amount, this.fromCur, this.toCur, this.date});
   List<String> lpName = ["CDZ", "ForexFree", "LiveRate", "Oanda", "Traders"];
   List<DatatableHeader> _headers = [
     DatatableHeader(
-        text: "ID",
-        value: "id",
-        show: false,
-        flex: 1,
-        sortable: true,
-        textAlign: TextAlign.left),
+      text: "ID",
+      value: "id",
+      show: false,
+      flex: 1,
+      sortable: true,
+      textAlign: TextAlign.left,
+    ),
     DatatableHeader(
         text: "Name",
         value: "name",
@@ -69,10 +74,22 @@ class _AggregatorPageState extends State<AggregatorPage> {
     APICall apiCall = APICall();
 
     Future.delayed(Duration(seconds: 3)).then((value) async {
-      List<CurrencyRate> lrc = await apiCall.getmaindata(fromCur, toCur);
+      String dateString = DateFormat('yyyy-MM-dd')
+          .format(date == null ? DateTime.now() : date)
+          .toString();
+      String currentDate =
+          DateFormat('yyyy-MM-dd').format(DateTime.now()).toString();
+      List<CurrencyRate> lrc;
+      dateString = '2020-11-26';
+      if (date == null || dateString == currentDate) {
+        lrc = await apiCall.getmaindata(fromCur, toCur);
+      } else {
+        debugPrint(dateString);
+        lrc = await apiCall.getGivenDates(fromCur, toCur, dateString);
+      }
       for (int i = 0; i < lrc.length; i++) {
         _source.add({
-          "id": i + 1,
+          "id": (i + 1).toString(),
           "name": lpName[i],
           "buyPrice": (double.parse(lrc[i].buy) * amount).toString(),
           "sellPrice": (double.parse(lrc[i].sell) * amount).toString(),
@@ -84,7 +101,6 @@ class _AggregatorPageState extends State<AggregatorPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     initData();
   }
@@ -117,7 +133,11 @@ class _AggregatorPageState extends State<AggregatorPage> {
                               icon: Icon(Icons.add),
                               label: Text("ADD CATEGORY"))
                           : */
-                      null,
+                      Text(_source.length == 0
+                          ? 'Loading...'
+                          : 'Total ' +
+                              _source.length.toString() +
+                              ' Results found!'),
                   /* actions: [
                         if (_isSearch)
                           Expanded(
@@ -145,10 +165,21 @@ class _AggregatorPageState extends State<AggregatorPage> {
                   headers: _headers,
                   source: _source,
                   selecteds: _selecteds,
-                  showSelect: _showSelect,
-                  autoHeight: false,
+                  showSelect: false,
+                  autoHeight: true,
                   onTabRow: (data) {
-                    print(data);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LiquidityPage(
+                          amount: amount,
+                          fromCur: fromCur,
+                          toCur: toCur,
+                          apiName: data["name"],
+                          currentDate: date,
+                        ),
+                      ),
+                    );
                   },
                   onSort: (value) {
                     setState(() {
@@ -169,76 +200,71 @@ class _AggregatorPageState extends State<AggregatorPage> {
                   onSelect: (value, item) {
                     print("$value  $item ");
                     if (value) {
+                      _selecteds.clear();
                       setState(() => _selecteds.add(item));
                     } else {
                       setState(
                           () => _selecteds.removeAt(_selecteds.indexOf(item)));
                     }
                   },
-                  onSelectAll: (value) {
-                    if (value) {
-                      setState(() => _selecteds =
-                          _source.map((entry) => entry).toList().cast());
-                    } else {
-                      setState(() => _selecteds.clear());
-                    }
-                  },
-                  footers: [
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Text("Rows per page:"),
-                    ),
-                    if (_perPages != null)
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: DropdownButton(
-                            value: _currentPerPage,
-                            items: _perPages
-                                .map((e) => DropdownMenuItem(
-                                      child: Text("$e"),
-                                      value: e,
-                                    ))
-                                .toList(),
-                            onChanged: (value) {
-                              setState(() {
-                                _currentPerPage = value;
-                              });
-                            }),
-                      ),
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child:
-                          Text("$_currentPage - $_currentPerPage of $_total"),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.arrow_back_ios,
-                        size: 16,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _currentPage =
-                              _currentPage >= 2 ? _currentPage - 1 : 1;
-                        });
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.arrow_forward_ios, size: 16),
-                      onPressed: () {
-                        setState(() {
-                          _currentPage++;
-                        });
-                      },
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                    )
-                  ],
+                  // onSelectAll: (value) {
+                  //   if (value) {
+                  //     setState(() => _selecteds =
+                  //         _source.map((entry) => entry).toList().cast());
+                  //   } else {
+                  //     setState(() => _selecteds.clear());
+                  //   }
+                  // },
+                  // footers: [
+                  //   Container(
+                  //     padding: EdgeInsets.symmetric(horizontal: 15),
+                  //     child: Text("Rows per page:"),
+                  //   ),
+                  //   if (_perPages != null)
+                  //     Container(
+                  //       padding: EdgeInsets.symmetric(horizontal: 15),
+                  //       child: DropdownButton(
+                  //           value: _currentPerPage,
+                  //           items: _perPages
+                  //               .map((e) => DropdownMenuItem(
+                  //                     child: Text("$e"),
+                  //                     value: e,
+                  //                   ))
+                  //               .toList(),
+                  //           onChanged: (value) {
+                  //             setState(() {
+                  //               _currentPerPage = value;
+                  //             });
+                  //           }),
+                  //     ),
+                  //   Container(
+                  //     padding: EdgeInsets.symmetric(horizontal: 15),
+                  //     child: Text("$_currentPage"),
+                  //   ),
+                  //   IconButton(
+                  //     icon: Icon(
+                  //       Icons.arrow_back_ios,
+                  //       size: 16,
+                  //     ),
+                  //     onPressed: () {
+                  //       setState(() {
+                  //         _currentPage =
+                  //             _currentPage >= 2 ? _currentPage - 1 : 1;
+                  //       });
+                  //     },
+                  //     padding: EdgeInsets.symmetric(horizontal: 15),
+                  //   ),
+                  // ],
                 ),
               ),
             ),
           ],
         ),
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   child: Icon(Icons.next_plan),
+      // ),
     );
   }
 }

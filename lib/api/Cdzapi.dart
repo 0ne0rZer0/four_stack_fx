@@ -24,7 +24,7 @@ class CdzAPI {
       buy = double.parse(buy);
       //debugPrint(buy.toString());
       var sell = buy;
-      sell = sell - random.nextDouble();
+      sell = sell - (random.nextDouble() / 10);
       //debugPrint(sell.toString());
       CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
       return currencyRate;
@@ -64,8 +64,8 @@ class CdzAPI {
       var convertedJSON = jsonDecode(responseJSON.body.toString());
       var value = new Map();
       var dates = convertedJSON["$convert"];
-      var buy = dates[date];
-      var sell = buy + 0.00001;
+      double buy = dates[date];
+      var sell = buy + (0.00001);
       CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
       return currencyRate;
     } else {

@@ -30,7 +30,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.1
   responsive_table: ^0.1.1+8
-
+  intl: ^0.16.1
+  syncfusion_flutter_charts: ^18.3.51
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -23,21 +23,46 @@ class OandaAPI {
     }
   }
 
+  // Future<List<CurrencyRate>> getRangeData(
+  //     String base, String target, String startDate, String endDate) async {
+  //   //YYYY-MM-DD
+  //   var responseJSON = await http.get(_url +
+  //       "/rates/candles.json?base=$base&quote=$target&start_time=$startDate&end_time=$endDate&api_key=" +
+  //       _apiKey);
+  //   if (responseJSON.statusCode == 200) {
+  //     var convertedJSON = jsonDecode(responseJSON.body.toString());
+  //     var arrayOfdates = convertedJSON["quotes"];
+  //     List<CurrencyRate> result = new List<CurrencyRate>();
+  //     for (int i = 0; i < arrayOfdates.length; i++) {
+  //       var buy = arrayOfdates[i]["average_bid"];
+  //       var sell = arrayOfdates[i]["average_ask"];
+  //       result.add(CurrencyRate(buy.toString(), sell.toString()));
+  //     }
+  //     return result;
+  //   } else {
+  //     throw Exception('Failed to load post');
+  //   }
+  // }
   Future<List<CurrencyRate>> getRangeData(
       String base, String target, String startDate, String endDate) async {
     //YYYY-MM-DD
-    var responseJSON = await http.get(_url +
-        "/rates/candles.json?base=$base&quote=$target&start_time=$startDate&end_time=$endDate&api_key=" +
-        _apiKey);
+    String _url =
+        "https://www1.oanda.com/rates/api/v2/rates/candles.json?api_key=8FmuBoxPfGI7PgDZoMvLO0uW&start_time=$startDate&end_time=$endDate&base=$base&quote=$target&fields=highs"; //key is updated
+    var responseJSON = await http.get(_url);
+    var convertedJSON = jsonDecode(responseJSON.body.toString());
+    //debugPrint(convertedJSON.toString());
+
     if (responseJSON.statusCode == 200) {
       var convertedJSON = jsonDecode(responseJSON.body.toString());
       var arrayOfdates = convertedJSON["quotes"];
+      // debugPrint(arrayOfdates.toString());
       List<CurrencyRate> result = new List<CurrencyRate>();
       for (int i = 0; i < arrayOfdates.length; i++) {
-        var buy = arrayOfdates[i]["average_bid"];
-        var sell = arrayOfdates[i]["average_ask"];
+        var buy = arrayOfdates[i]["high_bid"];
+        var sell = arrayOfdates[i]["high_ask"];
         result.add(CurrencyRate(buy.toString(), sell.toString()));
       }
+      //debugPrint(result[1]._buy);
       return result;
     } else {
       throw Exception('Failed to load post');
@@ -52,8 +77,8 @@ class OandaAPI {
       var convertedJSON = jsonDecode(responseJSON.body);
       var data = convertedJSON["quotes"];
       var data2 = convertedJSON["quotes"][0];
-      var buy = data2["bid"];
-      var sell = data2["ask"];
+      var buy = double.parse(data2["bid"]);
+      var sell = double.parse(data2["ask"]);
       CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
       return currencyRate;
     } else {

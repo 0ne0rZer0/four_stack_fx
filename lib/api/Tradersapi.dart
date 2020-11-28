@@ -59,8 +59,8 @@ class TradersAPI {
       var data = convertedJSON["quotes"];
 
       var data2 = convertedJSON["quotes"][0];
-      var buy = data2["high"];
-      var sell = data2["low"];
+      var buy = (data2["high"]);
+      var sell = (data2["low"]);
 
       CurrencyRate currencyRate = CurrencyRate(buy.toString(), sell.toString());
       return currencyRate;

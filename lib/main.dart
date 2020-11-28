@@ -1,28 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:four_stack_fx/api/sarrafchi.dart';
 import 'package:four_stack_fx/color.dart';
 import 'package:four_stack_fx/screens/aggregator_screen.dart';
-import 'package:four_stack_fx/screens/data_sample.dart';
+import 'screens/liquidty_info_screen.dart';
 
+//
 void main() {
   runApp(App());
 }
 
-String selectedFrom = 'INR';
-String selectedTo = 'USD';
-double amount = 0;
-var currencies = [
+String selectedFrom = 'EUR';
+String selectedTo = 'GBP';
+double amount = 1;
+DateTime selectedDate = DateTime.now();
+var fromCurrencies = [
   "USD",
   "EUR",
   "GBP",
-  "INR",
-  "HKD",
-  "SEK",
-  "CHF",
-  "CAD",
+];
+var toCurrencies = [
+  "GBP",
   "AUD",
-  "AED",
+  "CAD",
+  "CHF",
+  "SEF",
 ];
 
 class App extends StatelessWidget {
@@ -57,6 +58,32 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       selectedTo = name;
     });
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime.now().subtract(Duration(days: 7)),
+      lastDate: DateTime.now(),
+      helpText: "Upto last week",
+    );
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AggregatorPage(
+              amount: amount,
+              fromCur: selectedFrom,
+              toCur: selectedTo,
+              dateTime: selectedDate,
+            ),
+          ),
+        );
+      });
+    }
   }
 
   @override
@@ -151,6 +178,25 @@ class _HomePageState extends State<HomePage> {
                   );
                 },
               ),
+              SizedBox(
+                height: 10,
+              ),
+              RaisedButton(
+                elevation: 1,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                child: Text(
+                  'Check Old Rates',
+                  style: TextStyle(color: Colors.white),
+                ),
+                color: kPrimaryDarkColor,
+                onPressed: () async {
+                  debugPrint(selectedFrom);
+                  debugPrint(selectedTo);
+                  debugPrint(amount.toString());
+                  await _selectDate(context);
+                },
+              ),
               // Visibility(
               //   visible: isVisible,
               //   child: AggregatorPage(
@@ -191,14 +237,23 @@ class _DropDownMenuState extends State<DropDownMenu> {
           height: 10,
         ),
         DropdownButton<String>(
-          items: currencies
-              .map(
-                (name) => DropdownMenuItem<String>(
-                  value: name,
-                  child: Text(name),
-                ),
-              )
-              .toList(),
+          items: value == 1
+              ? fromCurrencies
+                  .map(
+                    (name) => DropdownMenuItem<String>(
+                      value: name,
+                      child: Text(name),
+                    ),
+                  )
+                  .toList()
+              : toCurrencies
+                  .map(
+                    (name) => DropdownMenuItem<String>(
+                      value: name,
+                      child: Text(name),
+                    ),
+                  )
+                  .toList(),
           onChanged: (String name) {
             setState(() {
               callback(name);
