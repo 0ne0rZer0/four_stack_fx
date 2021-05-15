@@ -9,7 +9,7 @@ You can also select previous date for history of prices of those currency
 
 ![History Selection](https://user-images.githubusercontent.com/43174511/118362493-55e56a00-b5ad-11eb-8783-68758ec1ca8d.png)
 
-This results in a table with each liquidity provider's Buy price and Sell price 
+This results in a table with each liquidity provider's Buy price and Sell price, which can be sorted according to all columns
 
 ![Table](https://user-images.githubusercontent.com/43174511/118361693-30a32c80-b5aa-11eb-8ac1-a440da849456.png)
 
