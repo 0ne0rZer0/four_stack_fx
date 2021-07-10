@@ -1,6 +1,6 @@
 # Four Stack FX
 Forex Aggregator is a responsive webapp made in Flutter for WU Hackathon 2020 
-
+[![Netlify Status](https://api.netlify.com/api/v1/badges/ff0ffa78-782c-4add-91cb-59f216419796/deploy-status)](https://app.netlify.com/sites/forexaggregator/deploys)
 Forex Aggregator takes two currencies with the amount and then fetches data from multiple vendors (through different APIs for demo)
 
 ![Home screen](https://user-images.githubusercontent.com/43174511/118361513-757a9380-b5a9-11eb-9c62-a350cf880976.png)
